@@ -429,9 +429,7 @@ body:not(.homepage) {
 
 /* Temporary styles for a placeholder box if image is missing */
 .row-full-width .gallery-item {
-    background-color: var(--grey-light);
     width: 100%;
-    min-height: 500px; /* Adjust height as needed */
 }
 
 /* ---------------------------------------------------------
