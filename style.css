@@ -17,7 +17,7 @@
 
     /* UPDATE THESE TO MATCH ADOBE FAMILY NAMES */
     /* Degular's Adobe family name is usually "degular-display" */
-    --font-header: "degular-display", sans-serif; 
+    --font-header: "degular-display", sans-serif;
     --font-body: 'Sequel Sans', sans-serif;
 
     --transition-smooth: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -28,7 +28,8 @@
    2. GLOBAL STRUCTURE & SYMMETRY
 --------------------------------------------------------- */
 html {
-    scroll-behavior: auto; 
+    scroll-behavior: auto;
+    /* Use dynamic viewport height to prevent mobile browser bars from cutting content */
 }
 
 * {
@@ -42,19 +43,18 @@ body {
     color: var(--black);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
-    line-height: 1.3;
-    /* We keep the padding, but the navbar will use negative margins to span full width */
-    padding: 0 2.5rem 2.5rem 2.5rem; 
-    display: block; /* Changed from flex to block to help sticky behavior */
+    /* REMOVE top padding from body, Navbar will handle it */
+    padding: 0 2.5rem 2.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
-    width: 100%;
+    /* Make sure this is 100vh, NOT 100dvh */
+    overflow-y: auto !important;
+    /* Force vertical scrolling to be allowed */
+    display: block;
+    /* Change from flex to block to allow natural height */
 }
 
-body.homepage {
-    height: auto; 
-    width: 100%;
-    overflow-x: hidden;
-}
 
 body:not(.homepage) {
     overflow-x: hidden;
@@ -62,28 +62,35 @@ body:not(.homepage) {
 
 /* --- 2. THE STICKY GLASS NAVBAR --- */
 #navbar-sticky {
-    position: -webkit-sticky; /* Support for Safari */
+    position: -webkit-sticky;
+    /* Support for Safari */
     position: sticky;
     top: 0;
     left: 0;
-    width: calc(100% + 5rem); /* Offsets the body padding (2.5rem + 2.5rem) */
-    margin-left: -2.5rem;      /* Pulls navbar to the very edge of the screen */
+    width: calc(100% + 5rem);
+    /* Offsets the body padding (2.5rem + 2.5rem) */
+    margin-left: -2.5rem;
+    /* Pulls navbar to the very edge of the screen */
     margin-right: -2.5rem;
-    padding: 1.5rem 2.5rem 0.5rem 2.5rem; /* Restores internal padding for content */
-    
-    z-index: 1000; /* Higher than content */
-    
+    padding: 1.5rem 2.5rem 0.5rem 2.5rem;
+    /* Restores internal padding for content */
+
+    z-index: 1000;
+    /* Higher than content */
+
     /* The Glass Effect */
-    background-color: rgba(255, 255, 255, 0.7); 
+    background-color: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    
+
     /* Transition for a smooth color change if needed */
     transition: background-color 0.3s ease;
 }
 
 /* Ensure images and content have a lower z-index so they slide UNDER the navbar */
-#content, .reveal, .project-gallery {
+#content,
+.reveal,
+.project-gallery {
     position: relative;
     z-index: 1;
 }
@@ -94,46 +101,39 @@ body:not(.homepage) {
 /* ---------------------------------------------------------
    STICKY GLASS NAVBAR
 --------------------------------------------------------- */
-/* --- 2. THE STICKY GLASS NAVBAR --- */
 #navbar-sticky {
-    position: -webkit-sticky;
     position: sticky;
     top: 0;
     left: 0;
+    /* Breakthrough body padding */
     width: calc(100% + 5rem);
     margin-left: -2.5rem;
     margin-right: -2.5rem;
-    
-    /* Increase padding-bottom to give the fade more room to breathe */
-    padding: 1.5rem 2.5rem 2rem 2.5rem; 
-    
-    z-index: 1000;
 
-    /* 1. The Glass Base */
+    /* Give the top of the navbar actual padding since body top-padding is 0 */
+    padding: 1.5rem 2.5rem 2rem 2.5rem;
+
+    z-index: 1000;
     background-color: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
 
-    /* 2. THE SECRET SAUCE: The Gradient Mask */
-    /* This tells the browser: "Make the top 60% solid, then fade to 0% at the bottom" */
+    /* The feather/fade mask */
     mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-
-    /* 3. Remove the border-bottom if you have one, as it creates a hard line */
-    border-bottom: none;
-
-    /* Stops the navbar from intercepting clicks on content in the "fade zone" */
-    pointer-events: none; 
+    pointer-events: none;
 }
 
-/* 4. Allow clicks on the actual links inside the navbar */
-#navbar-sticky .header-top,
-#navbar-sticky .header-main {
+#navbar-sticky .header-main,
+#navbar-sticky .header-top {
     pointer-events: auto;
+    /* Ensure links stay clickable */
 }
 
 /* Ensure images and content have a lower z-index so they slide UNDER the navbar */
-#content, .reveal, .project-gallery {
+#content,
+.reveal,
+.project-gallery {
     position: relative;
     z-index: 1;
 }
@@ -193,7 +193,7 @@ body:not(.homepage) {
 --------------------------------------------------------- */
 #content {
     flex: 1;
-    min-height: 0;
+    height: auto;
     display: flex;
     flex-direction: column;
 }
@@ -220,11 +220,11 @@ body:not(.homepage) {
 --------------------------------------------------------- */
 .about-main-grid {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1.5fr;
     gap: 4rem;
     align-items: start;
-    flex: 1;
-    min-height: 0;
+    width: 100%;
+    margin-top: 2rem;
 }
 
 .profile-img-container {
@@ -246,8 +246,24 @@ body:not(.homepage) {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
-    align-self: end;
-    padding-bottom: 1rem;
+    text-align: left;
+}
+
+/* Ensure project rows are multi-column on desktop */
+.row-split-right {
+    grid-template-columns: 1fr 2fr;
+}
+
+.row-3-col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.row-2-col {
+    grid-template-columns: 2fr 1fr;
+}
+
+.row-split-asym {
+    grid-template-columns: 1fr 2fr;
 }
 
 .info-item {
@@ -269,7 +285,7 @@ body:not(.homepage) {
     display: flex;
     gap: 4rem;
     padding-top: 1rem;
-    margin-top: auto;
+    margin-top: 0px;
     width: 100%;
 }
 
@@ -278,8 +294,10 @@ body:not(.homepage) {
     text-decoration: none;
     color: var(--black);
     display: flex;
-    align-items: center; /* Centers icon with text */
-    gap: 12px;           /* Space between icon and text */
+    align-items: center;
+    /* Centers icon with text */
+    gap: 12px;
+    /* Space between icon and text */
     font-family: var(--font-body);
     font-size: 1rem;
     transition: opacity 0.3s ease;
@@ -347,7 +365,8 @@ body:not(.homepage) {
     position: absolute !important;
     top: 1.5rem;
     left: 1.5rem;
-    margin: 0; /* Clear any default margins */
+    margin: 0;
+    /* Clear any default margins */
     font-size: 2rem;
     font-weight: 400;
     line-height: 1;
@@ -378,6 +397,12 @@ body:not(.homepage) {
     text-transform: uppercase;
 }
 
+/* Ensure the About page specifically isn't locked */
+#page-about {
+    height: auto !important;
+    overflow: visible !important;
+}
+
 /* ---------------------------------------------------------
    PROJECT PAGE SPECIFIC LAYOUTS
 --------------------------------------------------------- */
@@ -387,12 +412,14 @@ body:not(.homepage) {
 }
 
 #page-project .project-img {
-    filter: grayscale(0%) !important; /* Forces original color */
+    filter: grayscale(0%) !important;
+    /* Forces original color */
 }
 
 #page-project .project-img:hover {
-    filter: grayscale(0%) !important; 
-    cursor: default; /* Optional: removes the pointer finger */
+    filter: grayscale(0%) !important;
+    cursor: default;
+    /* Optional: removes the pointer finger */
 }
 
 .project-header {
@@ -405,18 +432,23 @@ body:not(.homepage) {
     letter-spacing: -0.04em;
     line-height: 0.9;
     margin-bottom: 0.5rem;
-    font-weight: 400; /* This removes the bold effect */
+    font-weight: 400;
+    /* This removes the bold effect */
 }
 
 .project-description.pill {
-    display: inline-block;      /* Shrinks the box to fit the text */
+    display: inline-block;
+    /* Shrinks the box to fit the text */
     font-size: 0.75rem;
-    padding: 0.5rem 1.2rem;     /* Vertical and Horizontal padding */
+    padding: 0.5rem 1.2rem;
+    /* Vertical and Horizontal padding */
     border: 1px solid var(--black);
-    border-radius: 30px;        /* Creates the rounded pill ends */
+    border-radius: 30px;
+    /* Creates the rounded pill ends */
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-top: 1.5rem;         /* Space between the Title and the Pill */
+    margin-top: 1.5rem;
+    /* Space between the Title and the Pill */
     color: var(--black);
     line-height: 1;
 }
@@ -425,7 +457,8 @@ body:not(.homepage) {
 .project-gallery {
     display: flex;
     flex-direction: column;
-    gap: 2rem; /* Spacing between rows */
+    gap: 2rem;
+    /* Spacing between rows */
     width: 100%;
     padding-bottom: 1rem;
 }
@@ -476,7 +509,8 @@ body:not(.homepage) {
 /* Asymmetric: Vertical vs Horizontal */
 .row-split-asym {
     grid-template-columns: 1fr 2fr;
-    align-items: stretch; /* Change from start to stretch */
+    align-items: stretch;
+    /* Change from start to stretch */
 }
 
 .row-split-asym .gallery-item {
@@ -484,8 +518,10 @@ body:not(.homepage) {
 }
 
 .row-split-asym .project-img {
-    height: 100%;      /* Forces image to fill the grid height */
-    object-fit: cover; /* Ensures the landscape image fills the height without stretching */
+    height: 100%;
+    /* Forces image to fill the grid height */
+    object-fit: cover;
+    /* Ensures the landscape image fills the height without stretching */
 }
 
 .gallery-item.tall img {
@@ -506,26 +542,132 @@ body:not(.homepage) {
 /* ---------------------------------------------------------
    RESPONSIVE
 --------------------------------------------------------- */
+/* ---------------------------------------------------------
+   8. RESPONSIVE POLISH (MOBILE)
+--------------------------------------------------------- */
 @media (max-width: 768px) {
-    .gallery-row {
-        grid-template-columns: 1fr !important;
-        /* Stack everything on mobile */
+    body {
+        padding: 0 1.5rem 1.5rem 1.5rem;
     }
 
-    .empty-space {
-        display: none;
+    /* FIX: Force EVERY project row to be 1 column only */
+    .gallery-row,
+    .row-split-right,
+    .row-3-col,
+    .row-2-col,
+    .row-split-asym {
+        grid-template-columns: 1fr !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1.5rem;
     }
+
+    /* FIX: About Page - Force 1 column and align strictly LEFT */
+    .about-main-grid,
+    .info-columns {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+        gap: 2rem;
+    }
+
+    .experience-list,
+    .education-list {
+        width: 100%;
+        text-align: left !important;
+    }
+
+    .info-item {
+        text-align: left !important;
+        width: 100% !important;
+        margin-bottom: 2rem;
+    }
+
+    /* Navigation sizing */
+    .logo,
+    .nav-link {
+        font-size: 2.8rem;
+    }
+
+    #navbar-sticky {
+        width: calc(100% + 3rem);
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        padding: 1rem 1.5rem 1.5rem 1.5rem;
+    }
+
+    /* Homepage Bottom Alignment */
+    body.homepage {
+        height: 100dvh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    body.homepage #content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+
+    .hero-container {
+        width: 100%;
+    }
+
+    .hero-image {
+        max-height: 50dvh;
+        object-fit: contain;
+    }
+
+    .intro-text {
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Prevent text overlapping on About/Work pages */
+/* --- ABOUT PAGE DESKTOP RESET --- */
+.about-main-grid {
+    display: grid !important;
+    /* Force grid back on desktop */
+    grid-template-columns: 1fr 1.5fr;
+    /* Left image, Right text */
+    gap: 4rem;
+    align-items: start;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.profile-column {
+    width: 100%;
+}
+
+.profile-img-container {
+    width: 100%;
+    max-height: 70vh;
+    /* Prevents image from being too tall */
+    overflow: hidden;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info-columns {
+    display: grid !important;
+    /* Force 2 columns for Exp/Edu */
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    text-align: left;
 }
 
 /* ---------------------------------------------------------
    8. ANIMATIONS & RESPONSIVE
 --------------------------------------------------------- */
-.reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity var(--transition-smooth), transform var(--transition-smooth);
-}
-
 .reveal.active {
     opacity: 1;
     transform: translateY(0);
@@ -543,11 +685,40 @@ body:not(.homepage) {
 
 @media (max-width: 768px) {
 
-    body,
+    /* --- 1. HOMEPAGE STRUCTURE --- */
     body.homepage {
-        padding: 1.5rem;
-        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        height: 100dvh;
+        /* Fill the screen */
+    }
+
+    body.homepage #content {
+        flex: 1;
+        /* Take up all available space between navbar and bottom */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        /* Pushes content to the bottom */
+    }
+
+    /* --- 2. HERO CONTAINER (Not Flushed) --- */
+    .hero-container {
+        width: 100%;
+        /* Stays inside the body padding */
+        margin-bottom: 0;
+        /* Respects the body's bottom padding */
+        line-height: 0;
+        /* Removes any tiny text-gap at the bottom */
+    }
+
+    .hero-image {
+        width: 100%;
         height: auto;
+        /* Limits height so it doesn't overlap the navbar on short screens */
+        max-height: 60dvh;
+        object-fit: contain;
+        /* Ensures the whole image is visible without cropping */
     }
 
     .header-main {
@@ -569,8 +740,24 @@ body:not(.homepage) {
     }
 
     .contact-footer {
-        flex-direction: column;
-        gap: 2rem;
+        display: flex !important;
+        flex-direction: column !important; /* This forces the one-column layout */
+        gap: 1.5rem !important;            /* Reduces the gap for mobile */
+        padding: 2rem 0 !important;        /* Adjusts spacing */
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    /* Prevents long links (like LinkedIn) from pushing the page width out */
+    .contact-group a {
+        word-break: break-all; 
+        font-size: 0.9rem; /* Slightly smaller text helps on small screens */
+    }
+
+    /* Fix potential overflow from the navbar calculation */
+    #navbar-sticky {
+        max-width: 100vw;
+        overflow-x: hidden;
     }
 }
 
@@ -583,21 +770,23 @@ body:not(.homepage) {
 .link-pill {
     display: inline-block;
     text-decoration: none;
-    font-family: var(--font-header); /* Matches your other pills */
+    font-family: var(--font-header);
+    /* Matches your other pills */
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--black);
-    
+
     /* The "Outline" state */
     padding: 0.4rem 1.2rem;
     border: 1px solid var(--black);
     border-radius: 30px;
     background-color: transparent;
-    
+
     /* Smooth transition for the hover effect */
     transition: background-color 0.3s ease, color 0.3s ease;
-    margin-left: 5px; /* Adds space between text and pill */
+    margin-left: 5px;
+    /* Adds space between text and pill */
     line-height: 1;
     vertical-align: middle;
 }
@@ -605,7 +794,8 @@ body:not(.homepage) {
 /* The "Hover" state */
 .link-pill:hover {
     background-color: var(--black);
-    color: var(--white) !important; /* Forces text to white */
+    color: var(--white) !important;
+    /* Forces text to white */
 }
 
 
@@ -613,24 +803,25 @@ body:not(.homepage) {
 /* ---------------------------------------------------------
    10. ANIMATION
 --------------------------------------------------------- */
-html.lenis, html.lenis body {
-  height: auto;
+html.lenis,
+html.lenis body {
+    height: auto;
 }
 
 .lenis.lenis-smooth {
-  scroll-behavior: auto !important;
+    scroll-behavior: auto !important;
 }
 
 .lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
+    overscroll-behavior: contain;
 }
 
 .lenis.lenis-stopped {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 .lenis.lenis-scrolling iframe {
-  pointer-events: none;
+    pointer-events: none;
 }
 
 
@@ -642,11 +833,18 @@ html.lenis, html.lenis body {
 .reveal {
     opacity: 0;
     /* Explicitly set X to 0 and Y to 40 to ensure it only moves vertically */
-    transform: translate3d(0, 40px, 0); 
-    transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1), 
-                transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translate3d(0, 40px, 0);
+    transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1),
+        transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
     will-change: opacity, transform;
 }
+
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+}
+
 
 .reveal.active {
     opacity: 1;
@@ -654,9 +852,17 @@ html.lenis, html.lenis body {
 }
 
 /* Staggered Entrance for the Work Grid */
-.work-grid .project-card.reveal:nth-child(3n+1) { transition-delay: 0.1s; }
-.work-grid .project-card.reveal:nth-child(3n+2) { transition-delay: 0.2s; }
-.work-grid .project-card.reveal:nth-child(3n+3) { transition-delay: 0.3s; }
+.work-grid .project-card.reveal:nth-child(3n+1) {
+    transition-delay: 0.1s;
+}
+
+.work-grid .project-card.reveal:nth-child(3n+2) {
+    transition-delay: 0.2s;
+}
+
+.work-grid .project-card.reveal:nth-child(3n+3) {
+    transition-delay: 0.3s;
+}
 
 /* ---------------------------------------------------------
    12. DYNAMIC FLOATING & LUXURY HOVER
@@ -664,9 +870,17 @@ html.lenis, html.lenis body {
 
 /* Keyframe for the slow drift */
 @keyframes ambientFloat {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-    100% { transform: translateY(0px); }
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 /* 
@@ -678,12 +892,15 @@ html.lenis, html.lenis body {
 }
 
 /* Ensure the floating independent for each row */
-.work-grid .project-card:nth-child(2n) .project-box { animation-delay: 1s; animation-duration: 14s; }
+.work-grid .project-card:nth-child(2n) .project-box {
+    animation-delay: 1s;
+    animation-duration: 14s;
+}
 
 /* The Hover State (Expanding smoothly) */
 .project-box {
-    transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1), 
-                box-shadow 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1),
+        box-shadow 1.2s cubic-bezier(0.23, 1, 0.32, 1);
     /* Soft base shadow */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
 }
@@ -691,10 +908,10 @@ html.lenis, html.lenis body {
 .project-card:hover .project-box {
     /* Scale up and lift slightly higher than the float */
     transform: scale(1.06) translateY(-15px) !important;
-    
+
     /* Stronger shadow on hover */
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.12), 
-                0 15px 25px rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.12),
+        0 15px 25px rgba(0, 0, 0, 0.05) !important;
     z-index: 100;
 }
 
@@ -706,9 +923,9 @@ html.lenis, html.lenis body {
     position: fixed !important;
     top: 0;
     left: 0;
-    width: 300px; 
+    width: 300px;
     height: 300px;
-    background: radial-gradient(circle, var(--aura-color, rgba(0,0,0,0.08)) 0%, rgba(0, 0, 0, 0) 70%) !important;
+    background: radial-gradient(circle, var(--aura-color, rgba(0, 0, 0, 0.08)) 0%, rgba(0, 0, 0, 0) 70%) !important;
     border-radius: 50%;
     pointer-events: none;
     z-index: 1;
