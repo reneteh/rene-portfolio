@@ -347,12 +347,11 @@ body:not(.homepage) {
 .project-image {
     width: 100%;
     height: auto;
-    /* Adapt to image's natural height */
     display: block;
-
-    /* INTERACTION LOGIC */
     filter: grayscale(100%);
-    transition: filter 0.4s ease-out;
+    /* Use the same luxury timing for color as the movement */
+    transition: filter 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: filter;
 }
 
 .project-card:hover .project-image {
@@ -829,40 +828,24 @@ html.lenis body {
    11. REFINED SCROLL REVEAL (ENTRANCE)
 --------------------------------------------------------- */
 
-/* This handles the "Ease in from bottom" for ALL pages */
 .reveal {
     opacity: 0;
-    /* Explicitly set X to 0 and Y to 40 to ensure it only moves vertically */
-    transform: translate3d(0, 40px, 0);
-    transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1),
-        transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translateY(30px);
+    transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), 
+                transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
 }
 
-.reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity var(--transition-smooth), transform var(--transition-smooth);
-}
-
-
 .reveal.active {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
 
-/* Staggered Entrance for the Work Grid */
-.work-grid .project-card.reveal:nth-child(3n+1) {
-    transition-delay: 0.1s;
-}
+/* Staggered Entrance for Work Grid */
+.work-grid .project-card.reveal:nth-child(3n+1) { transition-delay: 0.1s; }
+.work-grid .project-card.reveal:nth-child(3n+2) { transition-delay: 0.2s; }
+.work-grid .project-card.reveal:nth-child(3n+3) { transition-delay: 0.3s; }
 
-.work-grid .project-card.reveal:nth-child(3n+2) {
-    transition-delay: 0.2s;
-}
-
-.work-grid .project-card.reveal:nth-child(3n+3) {
-    transition-delay: 0.3s;
-}
 
 /* ---------------------------------------------------------
    12. DYNAMIC FLOATING & LUXURY HOVER
@@ -873,45 +856,38 @@ html.lenis body {
     0% {
         transform: translateY(0px);
     }
-
     50% {
         transform: translateY(-8px);
     }
-
     100% {
         transform: translateY(0px);
     }
 }
 
-/* 
-   We apply the animation to the INNER box so it doesn't 
-   fight the entrance transition of the OUTER card 
-*/
-.reveal.active .project-box {
-    animation: ambientFloat 12s ease-in-out infinite;
+#page-work .project-box {
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), 
+                box-shadow 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+    position: relative;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
 }
 
-/* Ensure the floating independent for each row */
-.work-grid .project-card:nth-child(2n) .project-box {
-    animation-delay: 1s;
-    animation-duration: 14s;
+/* GROWING and LIFTING effect */
+#page-work .project-card:hover .project-box {
+    transform: scale(1.05) translateY(-20px) !important;
+    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.12), 
+                0 20px 40px rgba(0, 0, 0, 0.05) !important;
+    z-index: 10;
 }
 
-/* The Hover State (Expanding smoothly) */
-.project-box {
-    transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1),
-        box-shadow 1.2s cubic-bezier(0.23, 1, 0.32, 1);
-    /* Soft base shadow */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+/* Sync the color fade with the growth */
+#page-work .project-card:hover .project-image {
+    filter: grayscale(0%) !important;
+    transition: filter 1.2s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.project-card:hover .project-box {
-    /* Scale up and lift slightly higher than the float */
-    transform: scale(1.06) translateY(-15px) !important;
-
-    /* Stronger shadow on hover */
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.12),
-        0 15px 25px rgba(0, 0, 0, 0.05) !important;
+/* Ensure hovered card is on top */
+#page-work .project-card:hover {
     z-index: 100;
 }
 
